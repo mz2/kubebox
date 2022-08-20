@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "ubuntu-core-20-amd64"
+  labels:
+    app: containerized-data-importer
+  annotations:
+    cdi.kubevirt.io/storage.import.endpoint: "https://cdimage.ubuntu.com/ubuntu-core/20/stable/current/ubuntu-core-20-amd64.img.xz"
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
