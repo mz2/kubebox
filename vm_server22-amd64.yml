@@ -1,0 +1,59 @@
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  creationTimestamp: 2018-07-04T15:03:08Z
+  generation: 1
+  labels:
+    vm-type: jammy
+    kubevirt.io/os: linux
+  name: jammy-server-amd64-vm
+spec:
+  running: true
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        kubevirt.io/size: small
+        kubevirt.io/domain: ubuntu-jammy
+    spec:
+      domain:
+        cpu:
+          cores: 2
+        devices:
+          autoattachPodInterface: true
+          autoattachSerialConsole: true
+          autoattachGraphicsDevice: true
+          disks:
+          - disk:
+              bus: virtio
+            name: disk0
+          - name: cloudinitvolume
+            disk:
+              bus: virtio
+        machine:
+          type: q35
+        resources:
+          requests:
+            memory: 2048M
+      volumes:
+      - name: disk0
+        persistentVolumeClaim:
+          claimName: jammy-server-amd64
+      - name: cloudinitvolume
+        cloudInitNoCloud:
+          userData: |-
+            #cloud-config
+            ssh_import_id:
+              - lp:mz2
+            chpasswd:
+              list: |
+                ubuntu:ubuntu
+              expire: False
+            packages: 
+             - qemu-guest-agent
+            # TODO: Insert checkbox PPAs and packages
+            runcmd:
+             - [ systemctl, start, qemu-guest-agent ] 
+            ssh_pwauth: True
+            package_update: True
+            package_upgrade: True

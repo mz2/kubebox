@@ -1,0 +1,12 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: kubevirt-cluster
+networking:
+  apiServerAddress: "127.0.0.1"
+  apiServerPort: 6443
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.23.0
+    extraPortMappings: # this stuff shouldn't be needed on Linux?
+    - containerPort: 30950
+      hostPort: 30950
