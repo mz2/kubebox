@@ -58,16 +58,14 @@ kubectl logs pods/importer-jammy-server-amd64 --follow
 # ... or?
 # kubectl wait --for=condition=ContainersReady --timeout -1s pod/importer-jammy-server-amd64
 
-
+# Create the VM
 kubectl create -f vm_server22-amd64.yml
-kubectl virt start jammy-server-amd64-vm
+kubectl wait --for=condition=Ready virtualmachines/jammy-server-amd64-vm
 
 # Create the load balancer Service to expose the ssh port externally
-# kubectl create -f vm-lb.yaml
+kubectl create -f vm-lb.yaml
 
 # Alternative way to expose the ssh port
 # kubectl virt expose vmi jammy-server-amd64-vm --name=jammy-server-amd64-ssh --port 22022 --target-port=22 --type=NodePort
 
-kubectl wait --for=condition=available vmi/jammy-server-amd64-vm # not sure this is the right wayt to wait?
-
-# Wait for the load balancer to be available as well?
+# TODO: Wait for the load balancer to be available as well
